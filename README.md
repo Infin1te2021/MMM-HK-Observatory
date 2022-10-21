@@ -41,7 +41,13 @@ Add the code below to the modules array in the `config/config.js` file:
         }
     ]
 ````
+If you want to use mouse left click to display the "next" day forecast, remember to enable the cursor in `main.css` file. Which should be `none` as default.
 
+````javascript
+html {
+  cursor: default;
+}
+````
 
 ## Configuration options
 | Option           | Type | Default | Description                                                             |
