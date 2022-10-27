@@ -60,7 +60,7 @@ Module.register("MMM-HK-Observatory", {
         innertable.appendChild(self.createHeader());
 
         const maxforecastnum = this.config.maxForecast
-        let maxforecastnumCopy = maxforecastnum
+        self.maxforecastnumCopy = maxforecastnum
 
         // Append row element --> Forecast, Temp&Hum, Description
         for (var i = 0; i < this.fetchedData.weatherForecast.length; i++){
@@ -83,20 +83,15 @@ Module.register("MMM-HK-Observatory", {
 
         // Click event: Click table to display the forcast out of the maxForecast
         table.addEventListener("click", function() {
-            const innertabletrElement = this.getElementsByTagName("tr");
+            self.innertabletrElement = this.getElementsByClassName("tableDataRow");
             // If all 9-day forecast are displayed --> Display the default number of forecast (maxForecast)
-            if (maxforecastnumCopy == 9){
+            if (self.maxforecastnumCopy >= 9){
                 maxforecastnumCopy = maxforecastnum;
-                for (var i = maxforecastnumCopy + 1; i < innertabletrElement.length - 1; i++) {
-                    innertabletrElement[i].style.display = innertabletrElement[i].style.display ? "" : "none";
-                }
-                maxforecastnumCopy = maxforecastnum;
+                self.returnMax(self.innertabletrElement, maxforecastnumCopy - 1);
+                self.maxforecastnumCopy = maxforecastnum;
             }else{
-                for (var i = maxforecastnumCopy + 1; i < innertabletrElement.length - 1; i++) {
-                    innertabletrElement[i].style.display = innertabletrElement[i].style.display ? "" : "none";
-                    maxforecastnumCopy += 1;
-                    break;
-                }
+                self.displayNext(self.innertabletrElement, self.maxforecastnumCopy);
+                self.maxforecastnumCopy += 1
             }
         })
 
@@ -196,6 +191,21 @@ Module.register("MMM-HK-Observatory", {
 
         return footerRow;
         },
+
+    // Display the next one day
+    displayNext: function(element, updatelen) {
+        for (var i = updatelen; i < element.length; i++) {
+            element[i].style.display = element[i].style.display ? "" : "none";
+            break
+        }
+    },
+
+    // Return to default forecast
+    returnMax: function(element, updatelen) {
+        for (var i = updatelen + 1; i < element.length; i++) {
+            element[i].style.display = element[i].style.display ? "" : "none";
+        }
+    },
 
     socketNotificationReceived: function(notification, payload) {
         if (notification === "DATA") {
