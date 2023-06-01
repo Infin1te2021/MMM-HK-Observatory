@@ -221,4 +221,23 @@ Module.register("MMM-HK-Observatory", {
                 // TODO: Update front-end to display specific error.
         }
     },
+	notificationReceived: function(notification, payload){
+		var self = this
+
+		var innertabletrElement = document.getElementsByClassName("tableDataRow");
+
+		if (notification === "LEAP_MOTION_UP"){
+
+			if (self.maxforecastnumCopy >= 9){
+				self.maxforecastnumCopy = this.config.maxForecast;
+				self.returnMax(innertabletrElement, this.config.maxForecast - 1);
+				self.maxforecastnumCopy = this.config.maxForecast;
+			} else {
+				self.displayNext(innertabletrElement, self.maxforecastnumCopy);
+				self.maxforecastnumCopy += 1
+
+            }
+
+		}
+	}
 });
